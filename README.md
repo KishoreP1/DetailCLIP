@@ -1,6 +1,6 @@
-# DetailCLIP
+# [DetailCLIP](https://arxiv.org/pdf/2409.06809)
 
-Detail-Oriented CLIP for Fine-Grained Tasks ([Amin Karimi Monsefi](https://github.com/7amin), [Kishore Prakash Sailaja](https://github.com/KishoreP1), [Ali Alilooee](https://cse.osu.edu/people/alilooeedolatabad.1), [Ser-Nam Lim](https://sites.google.com/site/sernam), [Rajiv Ramnath](https://cse.osu.edu/people/ramnath.6))
+Detail-Oriented CLIP for Fine-Grained Tasks ([Amin Karimi Monsefi](https://7amin.github.io/), [Kishore Prakash Sailaja](https://github.com/KishoreP1), [Ali Alilooee](https://cse.osu.edu/people/alilooeedolatabad.1), [Ser-Nam Lim](https://sites.google.com/site/sernam), [Rajiv Ramnath](https://cse.osu.edu/people/ramnath.6))
 
 DetailCLIP enhances CLIP-based models for fine-grained tasks like segmentation by using patch-level comparison and pixel-level reconstruction, with an attention-based token removal to focus on semantically relevant details. This results in superior segmentation accuracy and generalization across diverse datasets.
 
@@ -55,9 +55,21 @@ YFCC15M Setup: Please refer to [SLIP](https://github.com/facebookresearch/SLIP/t
 
 the code has been tested with SLRUM distrubted training. Sample SLURM script is provided in [sample_jobscript.sh](JOB/run.sh).
 
-Zero-shot evaluation code from SLIP is provided in [eval_zeroshot.py](eval_zeroshot.py). Modify as needed for the model.
+### Train DetaiCLIP ViT-B/16: 
+```
+python -m torch.distributed.launch --nproc_per_node=$NUM_PROC --nnodes=$NUM_NODES main.py \
+--model DetailCLIP_VITB16  --dataset yfcc15m --metadata yfcc15m.pkl \
+--output-dir output/$JOB_NAME --mask-ratio 0.5 --epochs 50 \
+--batch-size 256 --lr 5e-4 --wd 0.5 \
+--workers $NUM_WORKERS --clip_loss_weight 1 --ibot_patch_loss_weight 1 \
+--ibot_cls_loss_weight 1 --reconst_loss_weight 1 --print-freq 1000
+```
+### Zero-shot evaluation
+```
+python eval_zeroshot.py --resume /path/to/checkpoint.pt
+```
 
-For semantic segmenation and object detection evaluation, refer to [IBOT](https://github.com/bytedance/ibot)'s repo.
+For semantic segmenation and object detection evaluation, refer to [IBOT](https://github.com/bytedance/ibot)'s repo. We use mmseg framework to run evaluations.
 
 [extract_backbone_weights.py](extract_backbone_weights.py) can be used to extract backbone weights from the model. This might be useful for evaluation and other downstream tasks.
 
@@ -73,4 +85,17 @@ For semantic segmenation and object detection evaluation, refer to [IBOT](https:
 ### Object Detection
 <img src="misc/object_det.png" width="300"/> <img src="misc/object_det2.png" width="300"/>
 
+## Citation
+If the code or paper helped your work, please cite:
+```
+@misc{monsefi2024detailclipdetailorientedclipfinegrained,
+      title={DetailCLIP: Detail-Oriented CLIP for Fine-Grained Tasks}, 
+      author={Amin Karimi Monsefi and Kishore Prakash Sailaja and Ali Alilooee and Ser-Nam Lim and Rajiv Ramnath},
+      year={2024},
+      eprint={2409.06809},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2409.06809}, 
+}
+```
 
