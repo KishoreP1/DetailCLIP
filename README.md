@@ -55,6 +55,10 @@ YFCC15M Setup: Please refer to [SLIP](https://github.com/facebookresearch/SLIP/t
 
 the code has been tested with SLRUM distrubted training. Sample SLURM script is provided in [sample_jobscript.sh](JOB/run.sh).
 
+### Checkpoint
+
+[50 epoch checkpoint](https://buckeyemailosu-my.sharepoint.com/:u:/g/personal/prakashsailaja_1_buckeyemail_osu_edu/ESxsR4E6QxJFmufwh9_i-T0BYQP9DfbwQkJGrVt_IfD0Gw?e=cUmoI1)
+
 ### Train DetaiCLIP ViT-B/16: 
 ```
 python -m torch.distributed.launch --nproc_per_node=$NUM_PROC --nnodes=$NUM_NODES main.py \
